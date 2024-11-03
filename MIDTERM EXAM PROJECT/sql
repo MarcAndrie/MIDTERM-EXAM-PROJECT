@@ -1,0 +1,32 @@
+CREATE TABLE users (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    age INT NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    username VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    user_type ENUM('staff') DEFAULT 'staff',  -- Only 'staff' type is allowed in this setup
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Manga (
+    manga_id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    author VARCHAR(255) NOT NULL,
+    genre VARCHAR(100),
+    publication_date DATE,
+    added_by VARCHAR(255),  -- Username of the staff who added the manga entry
+    last_updated_by VARCHAR(255),  -- Username of the staff who last updated the manga entry
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE ActivityLog (
+    log_id INT PRIMARY KEY AUTO_INCREMENT,
+    action ENUM('insert', 'update', 'delete') NOT NULL,
+    manga_id INT,  -- Reference to the Manga table
+    username VARCHAR(255),  -- Username of the staff who performed the action
+    action_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (manga_id) REFERENCES Manga(manga_id) ON DELETE CASCADE
+);
+
